@@ -1,5 +1,6 @@
-import logo from './logo.svg';
+import logo from './Team9LogoTemporary.png';
 import './App.css';
+
 
 function App() {
   return (
