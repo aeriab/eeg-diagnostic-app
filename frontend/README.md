@@ -16,12 +16,3 @@ use "cd frontend"
 then "npm run start:full"
 
 press Ctrl+c to stop
-
-
-
-Weird inconsistency with package.json start:full:
-"npx concurrently \"npm run start\" \"cd ../backend && npm run start\""
-- works on my laptop but not PC
-
-"concurrently \"cd ../backend && node server.js\" \"npm start\""
-- works on PC but not laptop
