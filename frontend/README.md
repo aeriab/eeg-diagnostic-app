@@ -1,3 +1,8 @@
+Must have these installed:
+Node.js
+Python 3.12
+Git
+
 Brendan's Bash commands to install dependencies:
 cd frontend
 npm install
