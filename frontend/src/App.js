@@ -18,6 +18,8 @@ function Dot() {
   const [renderTrigger, setRenderTrigger] = useState(false);
   const [color, setColor] = useState(null);
   const [soundTrigger, setSoundTrigger] = useState(false);
+  const [resume, setResume] = useState(true);
+
   let beepPlaying = false;
   let beep = useRef(new Audio("/beep.mp3"));
 
@@ -46,14 +48,18 @@ function Dot() {
   //Basically it starts by immediately hiding the dot for a few seconds, then it triggers the Rerender() function and then shows the dot in a new location with a diff color
   //Then, it changes the renderTrigger variable which triggers the useEffect() again. useEffect() is basically used in place of a for loop b/c you can't do that in React :(
   useEffect(() => {
-    setTimeout(() => {
-      setVisibility(false);
+    if (resume) {
       setTimeout(() => {
-        Rerender();
-        setVisibility(true);
-        setRenderTrigger(!renderTrigger);
-      }, Math.floor(/*Math.random() * 5000 + */ 1000)); //Can change the timing on these if you want to make it random, right now it is set to 1 sec
-    }, Math.floor(/*Math.random() * 5000 + */ 1000));
+        setVisibility(false);
+        setTimeout(() => {
+          Rerender();
+          setVisibility(true);
+          setRenderTrigger(!renderTrigger);
+        }, Math.floor(/*Math.random() * 5000 + */ 1000)); //Can change the timing on these if you want to make it random, right now it is set to 1 sec
+      }, Math.floor(/*Math.random() * 5000 + */ 1000));
+    } else {
+      setVisibility(false);
+    }
   }, [renderTrigger]);
 
   //Similar structure to previous function. This one just randomly plays sounds
@@ -62,14 +68,13 @@ function Dot() {
     setTimeout(() => {
       (function playBeep() {
         beepPlaying = true;
-        console.log(beepPlaying);
+        console.log("BEEP");
         beep.current.currentTime = 0;
         beep.current
           .play()
           .catch((error) => console.log("Playback error:", error));
         setTimeout(() => {
           beepPlaying = false;
-          console.log(beepPlaying);
         }, 1000);
         setSoundTrigger(!soundTrigger);
       })();
@@ -85,10 +90,23 @@ function Dot() {
     console.log(color + " dot clicked.");
   }
 
+  function startDot() {
+    setResume(true);
+    setRenderTrigger(!renderTrigger);
+  }
+
+  function stopDot() {
+    setResume(false);
+  }
+
   return (
     <div>
       <div className="pointer">
         <h1>+</h1>
+      </div>
+      <div className="control">
+        <button onClick={() => startDot()}>Start</button>
+        <button onClick={() => stopDot()}>Stop</button>
       </div>
       <button
         onClick={() => dotClicked()}
