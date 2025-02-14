@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 function App() {
   return (
@@ -11,12 +11,15 @@ function App() {
 
 function Dot() {
   //All my different useState variables
-  const [isVisible, setVisibility] = useState(true);
+  const [isVisible, setVisibility] = useState(false);
   const [randomNumber, setRandomNumber] = useState(0);
   const [randomX, setRandomX] = useState(50);
   const [randomY, setRandomY] = useState(50);
   const [renderTrigger, setRenderTrigger] = useState(false);
   const [color, setColor] = useState(null);
+  const [soundTrigger, setSoundTrigger] = useState(false);
+  let beepPlaying = false;
+  let beep = useRef(new Audio("/beep.mp3"));
 
   //Array of colors, can be modified for *aesthetic*
   let colorOptions = [
@@ -52,6 +55,29 @@ function Dot() {
       }, Math.floor(/*Math.random() * 5000 + */ 1000)); //Can change the timing on these if you want to make it random, right now it is set to 1 sec
     }, Math.floor(/*Math.random() * 5000 + */ 1000));
   }, [renderTrigger]);
+
+  //Similar structure to previous function. This one just randomly plays sounds
+  //Currently it plays sounds at given intervals but this can be changed to suit the experiment
+  useEffect(() => {
+    setTimeout(() => {
+      (function playBeep() {
+        beepPlaying = true;
+        console.log(beepPlaying);
+        beep.current.currentTime = 0;
+        beep.current
+          .play()
+          .catch((error) => console.log("Playback error:", error));
+        setTimeout(() => {
+          beepPlaying = false;
+          console.log(beepPlaying);
+        }, 1000);
+        setSoundTrigger(!soundTrigger);
+      })();
+    }, 2000);
+  }, [soundTrigger]);
+
+  //use fetch for data retrieval
+  //set renderTrigger to null to end loop
 
   //Unecessary function but will be helpful later...
   function dotClicked() {
